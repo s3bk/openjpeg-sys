@@ -9,6 +9,11 @@ fn main() {
         cc.define("OPJ_HAVE__ALIGNED_MALLOC", Some("1"));
         #[cfg(feature = "threads")]
         cc.define("MUTEX_win32", Some("1"));
+    } else if target == "wasm" {
+        let wasi_sdk_path = std::env::var("WASI_SDK_PATH").expect("WASI_SDK_PATH not set");
+        cc.flag(&format!("--sysroot={}/share/wasi-sysroot/", wasi_sdk_path);
+        cc.define("_WASI_EMULATED_PROCESS_CLOCKS", Some("1"));
+        cc.define("CFLAGS", Some("-lwasi-emulated-process-clocks"));
     } else {
         cc.define("OPJ_HAVE_POSIX_MEMALIGN", Some("1"));
         #[cfg(feature = "threads")]
